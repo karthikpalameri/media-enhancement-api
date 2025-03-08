@@ -1,6 +1,8 @@
 # Media Enhancement API
 
-A Spring Boot application for enhancing images and videos with a priority queue system for processing requests.
+A Spring Boot demonstration project for enhancing images and videos with a priority queue system for processing requests.
+
+> **Note:** This is a demo project that simulates media enhancement with a 5-second delay. In a production environment, this would be replaced with actual image/video enhancement algorithms.
 
 ## Features
 
@@ -165,7 +167,19 @@ To solve this, the application uses:
 
 ### Simulated Processing
 
-Currently, the application simulates a 5-second processing time per file. In a real implementation, this would be replaced with actual enhancement algorithms.
+This demo project intentionally uses a 5-second delay to simulate processing time:
+
+```java
+// Simulate processing delay of 5 seconds
+Thread.sleep(5000);
+```
+
+This placeholder allows the application to demonstrate:
+- Asynchronous processing behavior
+- Priority queue functionality
+- Status tracking of requests
+
+In a real-world implementation, this would be replaced with actual enhancement algorithms for image/video processing.
 
 ## Example Workflow
 
