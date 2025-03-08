@@ -47,6 +47,17 @@ Form fields:
 
 Response: Request ID (UUID) with 202 Accepted status
 
+**Curl Example:**
+```bash
+curl -X POST \
+  http://localhost:8080/api/enhancement \
+  -H 'Content-Type: multipart/form-data' \
+  -F 'userId=user123' \
+  -F 'mediaType=IMAGE' \
+  -F 'priority=HIGH' \
+  -F 'file=@/path/to/your/image.jpg'
+```
+
 ### Get Enhancement Result
 
 ```
@@ -54,6 +65,11 @@ GET /api/enhancement/{requestId}
 ```
 
 Response: Enhancement result or status (QUEUED, PROCESSING, COMPLETED, FAILED)
+
+**Curl Example:**
+```bash
+curl -X GET http://localhost:8080/api/enhancement/550e8400-e29b-41d4-a716-446655440000
+```
 
 ### Get User Requests
 
@@ -63,6 +79,11 @@ GET /api/enhancement/user/{userId}
 
 Response: List of all requests for the user
 
+**Curl Example:**
+```bash
+curl -X GET http://localhost:8080/api/enhancement/user/user123
+```
+
 ### Cancel Request
 
 ```
@@ -70,6 +91,11 @@ DELETE /api/enhancement/{requestId}
 ```
 
 Response: 204 No Content
+
+**Curl Example:**
+```bash
+curl -X DELETE http://localhost:8080/api/enhancement/550e8400-e29b-41d4-a716-446655440000
+```
 
 ## Configuration
 
@@ -141,24 +167,34 @@ To solve this, the application uses:
 
 Currently, the application simulates a 5-second processing time per file. In a real implementation, this would be replaced with actual enhancement algorithms.
 
-## Testing with Curl/Postman
+## Example Workflow
 
-### Submit a request:
+1. **Submit an image for enhancement**:
+   ```bash
+   curl -X POST \
+     http://localhost:8080/api/enhancement \
+     -H 'Content-Type: multipart/form-data' \
+     -F 'userId=user123' \
+     -F 'mediaType=IMAGE' \
+     -F 'priority=HIGH' \
+     -F 'file=@/path/to/your/image.jpg'
+   ```
+   Response: `550e8400-e29b-41d4-a716-446655440000`
 
-```bash
-curl -X POST \
-  http://localhost:8080/api/enhancement \
-  -H 'Content-Type: multipart/form-data' \
-  -F 'userId=user123' \
-  -F 'mediaType=IMAGE' \
-  -F 'priority=HIGH' \
-  -F 'file=@/path/to/your/image.jpg'
-```
+2. **Check the status**:
+   ```bash
+   curl -X GET http://localhost:8080/api/enhancement/550e8400-e29b-41d4-a716-446655440000
+   ```
+   Response: `{"requestId":"550e8400-e29b-41d4-a716-446655440000","status":"PROCESSING","message":"Request is processing",...}`
 
-### Check status:
+3. **View all user requests**:
+   ```bash
+   curl -X GET http://localhost:8080/api/enhancement/user/user123
+   ```
+   Response: `[{"id":"550e8400-e29b-41d4-a716-446655440000","userId":"user123","status":"PROCESSING",...}]`
 
-```bash
-curl -X GET http://localhost:8080/api/enhancement/{requestId}
-```
-
-Replace `{requestId}` with the UUID returned from your submission. 
+4. **Cancel a request** (if still in queue):
+   ```bash
+   curl -X DELETE http://localhost:8080/api/enhancement/550e8400-e29b-41d4-a716-446655440000
+   ```
+   Response: `204 No Content` 
